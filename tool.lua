@@ -4,10 +4,12 @@ local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
+local Lighting = game:GetService("Lighting")
 
 local player = Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
 
+-- // UI SETUP // --
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "AdminCLegit_Final_Pro"
 screenGui.ResetOnSpawn = false
@@ -106,9 +108,35 @@ rightPanel.Parent = mainFrame
 Instance.new("UICorner", rightPanel).CornerRadius = UDim.new(0.05, 0)
 addFooter(rightPanel)
 
+-- // FPS BOOST LOGIC // --
+local function ApplyOptimizations()
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9e9
+    
+    local function OptimizeObj(obj)
+        if obj:IsA("Part") or obj:IsA("UnionOperation") or obj:IsA("MeshPart") then
+            obj.Material = Enum.Material.Plastic
+            obj.Reflectance = 0
+        elseif obj:IsA("Decal") or obj:IsA("Texture") then
+            obj.Transparency = 1
+        elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") then
+            obj.Enabled = false
+        elseif obj:IsA("PostEffect") or obj:IsA("BloomEffect") or obj:IsA("BlurEffect") or obj:IsA("SunRaysEffect") or obj:IsA("ColorCorrectionEffect") then
+            obj.Enabled = false
+        end
+    end
+
+    for _, v in ipairs(game:GetDescendants()) do OptimizeObj(v) end
+    workspace.DescendantAdded:Connect(OptimizeObj)
+end
+
+-- Tự động bật ngay khi chạy script
+task.spawn(ApplyOptimizations)
+
 local lowServerBtn = Instance.new("TextButton")
 lowServerBtn.Size = UDim2.new(0.9, 0, 0.25, 0)
-lowServerBtn.Position = UDim2.new(0.05, 0, 0.2, 0)
+lowServerBtn.Position = UDim2.new(0.05, 0, 0.1, 0)
 lowServerBtn.Text = "TÌM SERVER VẮNG"
 lowServerBtn.BackgroundColor3 = Color3.fromRGB(120, 50, 200)
 lowServerBtn.TextColor3 = Color3.new(1, 1, 1)
@@ -117,8 +145,20 @@ lowServerBtn.TextScaled = true
 lowServerBtn.Parent = rightPanel
 Instance.new("UICorner", lowServerBtn).CornerRadius = UDim.new(0.2, 0)
 
-local onlineLabel = createStatLabel(rightPanel, UDim2.new(0.1, 0, 0.55, 0), Color3.fromRGB(255, 255, 255))
+local boostBtn = Instance.new("TextButton")
+boostBtn.Size = UDim2.new(0.9, 0, 0.25, 0)
+boostBtn.Position = UDim2.new(0.05, 0, 0.4, 0)
+boostBtn.Text = "BOOST FPS (ON)"
+boostBtn.BackgroundColor3 = Color3.fromRGB(200, 150, 0)
+boostBtn.TextColor3 = Color3.new(1, 1, 1)
+boostBtn.Font = Enum.Font.GothamBold
+boostBtn.TextScaled = true
+boostBtn.Parent = rightPanel
+Instance.new("UICorner", boostBtn).CornerRadius = UDim.new(0.2, 0)
 
+local onlineLabel = createStatLabel(rightPanel, UDim2.new(0.1, 0, 0.75, 0), Color3.fromRGB(255, 255, 255))
+
+-- // CÁC THÀNH PHẦN KHÁC // --
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0.12, 0)
 titleLabel.Position = UDim2.new(0, 0, 0.02, 0)
@@ -175,24 +215,19 @@ closeButton.TextScaled = true
 closeButton.Parent = mainFrame
 Instance.new("UICorner", closeButton).CornerRadius = UDim.new(1, 0)
 
+-- // SỰ KIỆN // --
 task.spawn(function()
     while task.wait(1) do
-        local ping = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
-        pingLabel.Text = "Ping: " .. ping .. "ms"
-        local fps = math.floor(1 / RunService.RenderStepped:Wait())
-        fpsLabel.Text = "FPS: " .. fps
+        local p = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+        pingLabel.Text = "Ping: " .. p .. "ms"
+        local f = math.floor(1 / RunService.RenderStepped:Wait())
+        fpsLabel.Text = "FPS: " .. f
         onlineLabel.Text = "Online: " .. #Players:GetPlayers() .. " / " .. game.Players.MaxPlayers
     end
 end)
 
-openButton.MouseButton1Click:Connect(function()
-    mainFrame.Visible = true
-    openButton.Visible = false
-end)
-closeButton.MouseButton1Click:Connect(function()
-    mainFrame.Visible = false
-    openButton.Visible = true
-end)
+openButton.MouseButton1Click:Connect(function() mainFrame.Visible = true openButton.Visible = false end)
+closeButton.MouseButton1Click:Connect(function() mainFrame.Visible = false openButton.Visible = true end)
 
 local dragging, dragStart, startPos
 mainFrame.InputBegan:Connect(function(input)
@@ -206,9 +241,7 @@ UserInputService.InputChanged:Connect(function(input)
         mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 end)
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
-end)
+UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
 
 joinBtn.MouseButton1Click:Connect(function()
     local id = jobIdBox.Text:gsub("%s+", "")
@@ -221,19 +254,26 @@ joinBtn.MouseButton1Click:Connect(function()
 end)
 
 lowServerBtn.MouseButton1Click:Connect(function()
-    lowServerBtn.Text = "ĐANG DÒ TÌM..."
+    lowServerBtn.Text = "ĐANG DÒ..."
     local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
-    local success, result = pcall(function() return HttpService:JSONDecode(game:HttpGet(url)) end)
-    if success and result and result.data then
-        for _, server in ipairs(result.data) do
-            if server.id ~= game.JobId and (server.maxPlayers - server.playing) >= 4 then
-                lowServerBtn.Text = "ĐÃ TÌM THẤY!!"
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, player)
+    local s, res = pcall(function() return HttpService:JSONDecode(game:HttpGet(url)) end)
+    if s and res and res.data then
+        for _, srv in ipairs(res.data) do
+            if srv.id ~= game.JobId and (srv.maxPlayers - srv.playing) >= 4 then
+                lowServerBtn.Text = "ĐÃ TÌM THẤY!"
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, srv.id, player)
                 return
             end
         end
     end
-    lowServerBtn.Text = "KHÔNG TÌM THẤY...!"
+    lowServerBtn.Text = "THỬ LẠI SAU"
     task.wait(1)
     lowServerBtn.Text = "TÌM SERVER VẮNG"
+end)
+
+boostBtn.MouseButton1Click:Connect(function()
+    boostBtn.Text = "ĐANG BOOST..."
+    ApplyOptimizations()
+    task.wait(1)
+    boostBtn.Text = "BOOST FPS (ON)"
 end)
