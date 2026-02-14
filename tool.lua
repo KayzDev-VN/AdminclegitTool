@@ -5,16 +5,24 @@ local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
 local Lighting = game:GetService("Lighting")
+local StarterGui = game:GetService("StarterGui")
 
 local player = Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
 
--- // UI SETUP // --
+local adminList = {1, 154123, "AdminName1"} 
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "AdminCLegit_Final_Pro"
 screenGui.ResetOnSpawn = false
 screenGui.IgnoreGuiInset = true
 screenGui.Parent = pGui
+
+StarterGui:SetCore("SendNotification", {
+    Title = "ADMINCLEGIT",
+    Text = "Tool is running...",
+    Duration = 5,
+})
 
 local function addFooter(parent)
     local footer = Instance.new("TextLabel")
@@ -51,20 +59,18 @@ mainFrame.Parent = screenGui
 Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0.05, 0)
 
 local aspectConstraint = Instance.new("UIAspectRatioConstraint")
-aspectConstraint.AspectRatio = 1.2
+aspectConstraint.AspectRatio = 1.3
 aspectConstraint.Parent = mainFrame
-addFooter(mainFrame)
 
 local leftPanel = Instance.new("Frame")
 leftPanel.Size = UDim2.new(0.45, 0, 1, 0)
-leftPanel.Position = UDim2.new(-0.5, 0, 0, 0)
+leftPanel.Position = UDim2.new(-0.48, 0, 0, 0)
 leftPanel.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 leftPanel.Parent = mainFrame
 Instance.new("UICorner", leftPanel).CornerRadius = UDim.new(0.05, 0)
-addFooter(leftPanel)
 
 local avatarImg = Instance.new("ImageLabel")
-avatarImg.Size = UDim2.new(0.55, 0, 0.4, 0)
+avatarImg.Size = UDim2.new(0.45, 0, 0.35, 0)
 avatarImg.Position = UDim2.new(0.5, 0, 0.05, 0)
 avatarImg.AnchorPoint = Vector2.new(0.5, 0)
 avatarImg.BackgroundTransparency = 1
@@ -73,8 +79,8 @@ avatarImg.Parent = leftPanel
 Instance.new("UICorner", avatarImg).CornerRadius = UDim.new(1, 0)
 
 local nameLabel = Instance.new("TextLabel")
-nameLabel.Size = UDim2.new(0.9, 0, 0.12, 0)
-nameLabel.Position = UDim2.new(0.05, 0, 0.48, 0)
+nameLabel.Size = UDim2.new(0.9, 0, 0.1, 0)
+nameLabel.Position = UDim2.new(0.05, 0, 0.42, 0)
 nameLabel.Text = player.DisplayName
 nameLabel.Font = Enum.Font.GothamBold
 nameLabel.TextScaled = true
@@ -84,7 +90,7 @@ nameLabel.Parent = leftPanel
 
 local function createStatLabel(parent, pos, color)
     local lab = Instance.new("TextLabel")
-    lab.Size = UDim2.new(0.9, 0, 0.08, 0)
+    lab.Size = UDim2.new(0.9, 0, 0.07, 0)
     lab.Position = pos
     lab.Font = Enum.Font.Code
     lab.TextScaled = true
@@ -95,25 +101,34 @@ local function createStatLabel(parent, pos, color)
     return lab
 end
 
-local pingLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.62, 0), Color3.fromRGB(255, 200, 0))
-local fpsLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.72, 0), Color3.fromRGB(0, 255, 150))
-local ageLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.82, 0), Color3.fromRGB(0, 180, 255))
-ageLabel.Text = "Age: " .. player.AccountAge .. "d"
+local pingLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.52, 0), Color3.fromRGB(255, 200, 0))
+local fpsLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.60, 0), Color3.fromRGB(0, 255, 150))
+local ageLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.68, 0), Color3.fromRGB(0, 180, 255))
+local onlineLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.76, 0), Color3.fromRGB(255, 255, 255))
+
+local checkAdminBtn = Instance.new("TextButton")
+checkAdminBtn.Size = UDim2.new(0.85, 0, 0.1, 0)
+checkAdminBtn.Position = UDim2.new(0.5, 0, 0.88, 0)
+checkAdminBtn.AnchorPoint = Vector2.new(0.5, 0.5)
+checkAdminBtn.Text = "KIỂM TRA ADMIN"
+checkAdminBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+checkAdminBtn.TextColor3 = Color3.new(1, 1, 1)
+checkAdminBtn.Font = Enum.Font.GothamBold
+checkAdminBtn.TextScaled = true
+checkAdminBtn.Parent = leftPanel
+Instance.new("UICorner", checkAdminBtn).CornerRadius = UDim.new(0.2, 0)
 
 local rightPanel = Instance.new("Frame")
 rightPanel.Size = UDim2.new(0.45, 0, 1, 0)
-rightPanel.Position = UDim2.new(1.05, 0, 0, 0)
+rightPanel.Position = UDim2.new(1.03, 0, 0, 0)
 rightPanel.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 rightPanel.Parent = mainFrame
 Instance.new("UICorner", rightPanel).CornerRadius = UDim.new(0.05, 0)
-addFooter(rightPanel)
 
--- // FPS BOOST LOGIC // --
 local function ApplyOptimizations()
     settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
     Lighting.GlobalShadows = false
     Lighting.FogEnd = 9e9
-    
     local function OptimizeObj(obj)
         if obj:IsA("Part") or obj:IsA("UnionOperation") or obj:IsA("MeshPart") then
             obj.Material = Enum.Material.Plastic
@@ -126,13 +141,83 @@ local function ApplyOptimizations()
             obj.Enabled = false
         end
     end
-
     for _, v in ipairs(game:GetDescendants()) do OptimizeObj(v) end
     workspace.DescendantAdded:Connect(OptimizeObj)
 end
-
--- Tự động bật ngay khi chạy script
 task.spawn(ApplyOptimizations)
+
+local function TeleportLow()
+    local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+    local s, res = pcall(function() return HttpService:JSONDecode(game:HttpGet(url)) end)
+    if s and res and res.data then
+        for _, srv in ipairs(res.data) do
+            if srv.id ~= game.JobId and (srv.maxPlayers - srv.playing) >= 4 then
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, srv.id, player)
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function RunCheckLogic()
+    local overlay = Instance.new("Frame")
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.BackgroundColor3 = Color3.new(0, 0, 0)
+    overlay.BackgroundTransparency = 0.5
+    overlay.ZIndex = 10000
+    overlay.Parent = screenGui
+
+    local box = Instance.new("Frame")
+    box.Size = UDim2.new(0, 300, 0, 300)
+    box.Position = UDim2.new(0.5, 0, 0.5, 0)
+    box.AnchorPoint = Vector2.new(0.5, 0.5)
+    box.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    box.ZIndex = 10001
+    box.Parent = overlay
+    Instance.new("UICorner", box)
+
+    local t = Instance.new("TextLabel")
+    t.Size = UDim2.new(1, 0, 0.3, 0)
+    t.Text = "ADMINCLEGIT BOT"
+    t.TextColor3 = Color3.fromRGB(255, 50, 50)
+    t.Font = Enum.Font.GothamBold
+    t.TextScaled = true
+    t.BackgroundTransparency = 1
+    t.ZIndex = 10002
+    t.Parent = box
+
+    local st = Instance.new("TextLabel")
+    st.Size = UDim2.new(0.9, 0, 0.4, 0)
+    st.Position = UDim2.new(0.05, 0, 0.4, 0)
+    st.Text = "Đang kiểm tra admin.."
+    st.TextColor3 = Color3.new(1, 1, 1)
+    st.Font = Enum.Font.Gotham
+    st.TextScaled = true
+    st.BackgroundTransparency = 1
+    st.ZIndex = 10002
+    st.Parent = box
+
+    task.wait(5)
+
+    local count = 0
+    for _, p in ipairs(Players:GetPlayers()) do
+        for _, id in ipairs(adminList) do
+            if p.UserId == id or p.Name == id then count = count + 1 end
+        end
+    end
+
+    if count == 0 then
+        st.Text = "Không có admin nào trong server"
+        task.wait(3)
+        overlay:Destroy()
+    else
+        st.Text = "Chúng tôi phát hiện có " .. count .. " admin, đang dịch chuyển"
+        task.wait(3)
+        TeleportLow()
+        overlay:Destroy()
+    end
+end
 
 local lowServerBtn = Instance.new("TextButton")
 lowServerBtn.Size = UDim2.new(0.9, 0, 0.25, 0)
@@ -156,9 +241,6 @@ boostBtn.TextScaled = true
 boostBtn.Parent = rightPanel
 Instance.new("UICorner", boostBtn).CornerRadius = UDim.new(0.2, 0)
 
-local onlineLabel = createStatLabel(rightPanel, UDim2.new(0.1, 0, 0.75, 0), Color3.fromRGB(255, 255, 255))
-
--- // CÁC THÀNH PHẦN KHÁC // --
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0.12, 0)
 titleLabel.Position = UDim2.new(0, 0, 0.02, 0)
@@ -168,16 +250,6 @@ titleLabel.TextScaled = true
 titleLabel.TextColor3 = Color3.new(1, 1, 1)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Parent = mainFrame
-
-local placeIdLabel = Instance.new("TextLabel")
-placeIdLabel.Size = UDim2.new(1, 0, 0.07, 0)
-placeIdLabel.Position = UDim2.new(0, 0, 0.15, 0)
-placeIdLabel.Text = "Place ID: " .. game.PlaceId
-placeIdLabel.Font = Enum.Font.Code
-placeIdLabel.TextScaled = true
-placeIdLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
-placeIdLabel.BackgroundTransparency = 1
-placeIdLabel.Parent = mainFrame
 
 local jobIdBox = Instance.new("TextBox")
 jobIdBox.Size = UDim2.new(0.85, 0, 0.18, 0)
@@ -215,7 +287,6 @@ closeButton.TextScaled = true
 closeButton.Parent = mainFrame
 Instance.new("UICorner", closeButton).CornerRadius = UDim.new(1, 0)
 
--- // SỰ KIỆN // --
 task.spawn(function()
     while task.wait(1) do
         local p = math.floor(Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
@@ -226,8 +297,16 @@ task.spawn(function()
     end
 end)
 
+task.spawn(function()
+    while true do
+        task.wait(15 * 60)
+        RunCheckLogic()
+    end
+end)
+
 openButton.MouseButton1Click:Connect(function() mainFrame.Visible = true openButton.Visible = false end)
 closeButton.MouseButton1Click:Connect(function() mainFrame.Visible = false openButton.Visible = true end)
+checkAdminBtn.MouseButton1Click:Connect(RunCheckLogic)
 
 local dragging, dragStart, startPos
 mainFrame.InputBegan:Connect(function(input)
@@ -245,28 +324,12 @@ UserInputService.InputEnded:Connect(function(input) if input.UserInputType == En
 
 joinBtn.MouseButton1Click:Connect(function()
     local id = jobIdBox.Text:gsub("%s+", "")
-    if #id > 5 then
-        joinBtn.Text = "ĐANG KẾT NỐI..."
-        TeleportService:TeleportToPlaceInstance(game.PlaceId, id, player)
-        task.wait(2)
-        joinBtn.Text = "THAM GIA"
-    end
+    if #id > 5 then TeleportService:TeleportToPlaceInstance(game.PlaceId, id, player) end
 end)
 
 lowServerBtn.MouseButton1Click:Connect(function()
     lowServerBtn.Text = "ĐANG DÒ..."
-    local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
-    local s, res = pcall(function() return HttpService:JSONDecode(game:HttpGet(url)) end)
-    if s and res and res.data then
-        for _, srv in ipairs(res.data) do
-            if srv.id ~= game.JobId and (srv.maxPlayers - srv.playing) >= 4 then
-                lowServerBtn.Text = "ĐÃ TÌM THẤY!"
-                TeleportService:TeleportToPlaceInstance(game.PlaceId, srv.id, player)
-                return
-            end
-        end
-    end
-    lowServerBtn.Text = "THỬ LẠI SAU"
+    TeleportLow()
     task.wait(1)
     lowServerBtn.Text = "TÌM SERVER VẮNG"
 end)
@@ -277,3 +340,7 @@ boostBtn.MouseButton1Click:Connect(function()
     task.wait(1)
     boostBtn.Text = "BOOST FPS (ON)"
 end)
+
+addFooter(mainFrame)
+addFooter(leftPanel)
+addFooter(rightPanel)
