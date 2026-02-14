@@ -10,7 +10,7 @@ local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
 
-local adminList = {1, 154123, "AdminName1"} 
+local adminList = {"Uzoth", "Rip_Indra", "mygame43"} 
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "AdminCLegit_Final_Pro"
@@ -19,8 +19,8 @@ screenGui.IgnoreGuiInset = true
 screenGui.Parent = pGui
 
 StarterGui:SetCore("SendNotification", {
-    Title = "ADMINCLEGIT",
-    Text = "Tool is running...",
+    Title = "ADMINCLEGIT DEV",
+    Text = "Adminclegit Tool is running...",
     Duration = 5,
 })
 
@@ -40,7 +40,7 @@ local openButton = Instance.new("TextButton")
 openButton.Size = UDim2.new(0.2, 0, 0.05, 0)
 openButton.Position = UDim2.new(0.5, 0, 0.05, 0)
 openButton.AnchorPoint = Vector2.new(0.5, 0)
-openButton.Text = "OPEN ADMIN_CLEGIT TOOL"
+openButton.Text = "OPEN ADMINCLEGIT TOOL"
 openButton.Font = Enum.Font.GothamBold
 openButton.TextScaled = true
 openButton.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
@@ -78,16 +78,6 @@ avatarImg.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..pla
 avatarImg.Parent = leftPanel
 Instance.new("UICorner", avatarImg).CornerRadius = UDim.new(1, 0)
 
-local nameLabel = Instance.new("TextLabel")
-nameLabel.Size = UDim2.new(0.9, 0, 0.1, 0)
-nameLabel.Position = UDim2.new(0.05, 0, 0.42, 0)
-nameLabel.Text = player.DisplayName
-nameLabel.Font = Enum.Font.GothamBold
-nameLabel.TextScaled = true
-nameLabel.TextColor3 = Color3.new(1, 1, 1)
-nameLabel.BackgroundTransparency = 1
-nameLabel.Parent = leftPanel
-
 local function createStatLabel(parent, pos, color)
     local lab = Instance.new("TextLabel")
     lab.Size = UDim2.new(0.9, 0, 0.07, 0)
@@ -101,22 +91,14 @@ local function createStatLabel(parent, pos, color)
     return lab
 end
 
+local nameLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.42, 0), Color3.new(1,1,1))
+nameLabel.Text = player.DisplayName
+nameLabel.Font = Enum.Font.GothamBold
+
 local pingLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.52, 0), Color3.fromRGB(255, 200, 0))
 local fpsLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.60, 0), Color3.fromRGB(0, 255, 150))
 local ageLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.68, 0), Color3.fromRGB(0, 180, 255))
 local onlineLabel = createStatLabel(leftPanel, UDim2.new(0.1, 0, 0.76, 0), Color3.fromRGB(255, 255, 255))
-
-local checkAdminBtn = Instance.new("TextButton")
-checkAdminBtn.Size = UDim2.new(0.85, 0, 0.1, 0)
-checkAdminBtn.Position = UDim2.new(0.5, 0, 0.88, 0)
-checkAdminBtn.AnchorPoint = Vector2.new(0.5, 0.5)
-checkAdminBtn.Text = "KIỂM TRA ADMIN"
-checkAdminBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
-checkAdminBtn.TextColor3 = Color3.new(1, 1, 1)
-checkAdminBtn.Font = Enum.Font.GothamBold
-checkAdminBtn.TextScaled = true
-checkAdminBtn.Parent = leftPanel
-Instance.new("UICorner", checkAdminBtn).CornerRadius = UDim.new(0.2, 0)
 
 local rightPanel = Instance.new("Frame")
 rightPanel.Size = UDim2.new(0.45, 0, 1, 0)
@@ -124,6 +106,39 @@ rightPanel.Position = UDim2.new(1.03, 0, 0, 0)
 rightPanel.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 rightPanel.Parent = mainFrame
 Instance.new("UICorner", rightPanel).CornerRadius = UDim.new(0.05, 0)
+
+local lowServerBtn = Instance.new("TextButton")
+lowServerBtn.Size = UDim2.new(0.9, 0, 0.22, 0)
+lowServerBtn.Position = UDim2.new(0.05, 0, 0.08, 0)
+lowServerBtn.Text = "TÌM SERVER VẮNG"
+lowServerBtn.BackgroundColor3 = Color3.fromRGB(120, 50, 200)
+lowServerBtn.TextColor3 = Color3.new(1, 1, 1)
+lowServerBtn.Font = Enum.Font.GothamBold
+lowServerBtn.TextScaled = true
+lowServerBtn.Parent = rightPanel
+Instance.new("UICorner", lowServerBtn).CornerRadius = UDim.new(0.2, 0)
+
+local boostBtn = Instance.new("TextButton")
+boostBtn.Size = UDim2.new(0.9, 0, 0.22, 0)
+boostBtn.Position = UDim2.new(0.05, 0, 0.35, 0)
+boostBtn.Text = "BOOST FPS (ON)"
+boostBtn.BackgroundColor3 = Color3.fromRGB(200, 150, 0)
+boostBtn.TextColor3 = Color3.new(1, 1, 1)
+boostBtn.Font = Enum.Font.GothamBold
+boostBtn.TextScaled = true
+boostBtn.Parent = rightPanel
+Instance.new("UICorner", boostBtn).CornerRadius = UDim.new(0.2, 0)
+
+local checkAdminBtn = Instance.new("TextButton")
+checkAdminBtn.Size = UDim2.new(0.9, 0, 0.22, 0)
+checkAdminBtn.Position = UDim2.new(0.05, 0, 0.62, 0)
+checkAdminBtn.Text = "KIỂM TRA ADMIN"
+checkAdminBtn.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+checkAdminBtn.TextColor3 = Color3.new(1, 1, 1)
+checkAdminBtn.Font = Enum.Font.GothamBold
+checkAdminBtn.TextScaled = true
+checkAdminBtn.Parent = rightPanel
+Instance.new("UICorner", checkAdminBtn).CornerRadius = UDim.new(0.2, 0)
 
 local function ApplyOptimizations()
     settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
@@ -169,7 +184,7 @@ local function RunCheckLogic()
     overlay.Parent = screenGui
 
     local box = Instance.new("Frame")
-    box.Size = UDim2.new(0, 300, 0, 300)
+    box.Size = UDim2.new(0, 350, 0, 350)
     box.Position = UDim2.new(0.5, 0, 0.5, 0)
     box.AnchorPoint = Vector2.new(0.5, 0.5)
     box.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
@@ -190,7 +205,7 @@ local function RunCheckLogic()
     local st = Instance.new("TextLabel")
     st.Size = UDim2.new(0.9, 0, 0.4, 0)
     st.Position = UDim2.new(0.05, 0, 0.4, 0)
-    st.Text = "Đang kiểm tra admin.."
+    st.Text = "Đang Kiểm Tra Admin..."
     st.TextColor3 = Color3.new(1, 1, 1)
     st.Font = Enum.Font.Gotham
     st.TextScaled = true
@@ -208,38 +223,16 @@ local function RunCheckLogic()
     end
 
     if count == 0 then
-        st.Text = "Không có admin nào trong server"
+        st.Text = "Không phát hiện admin nào.."
         task.wait(3)
         overlay:Destroy()
     else
-        st.Text = "Chúng tôi phát hiện có " .. count .. " admin, đang dịch chuyển"
+        st.Text = "Phát hiện " .. count .. " admin, đang né tránh!!!"
         task.wait(3)
         TeleportLow()
         overlay:Destroy()
     end
 end
-
-local lowServerBtn = Instance.new("TextButton")
-lowServerBtn.Size = UDim2.new(0.9, 0, 0.25, 0)
-lowServerBtn.Position = UDim2.new(0.05, 0, 0.1, 0)
-lowServerBtn.Text = "TÌM SERVER VẮNG"
-lowServerBtn.BackgroundColor3 = Color3.fromRGB(120, 50, 200)
-lowServerBtn.TextColor3 = Color3.new(1, 1, 1)
-lowServerBtn.Font = Enum.Font.GothamBold
-lowServerBtn.TextScaled = true
-lowServerBtn.Parent = rightPanel
-Instance.new("UICorner", lowServerBtn).CornerRadius = UDim.new(0.2, 0)
-
-local boostBtn = Instance.new("TextButton")
-boostBtn.Size = UDim2.new(0.9, 0, 0.25, 0)
-boostBtn.Position = UDim2.new(0.05, 0, 0.4, 0)
-boostBtn.Text = "BOOST FPS (ON)"
-boostBtn.BackgroundColor3 = Color3.fromRGB(200, 150, 0)
-boostBtn.TextColor3 = Color3.new(1, 1, 1)
-boostBtn.Font = Enum.Font.GothamBold
-boostBtn.TextScaled = true
-boostBtn.Parent = rightPanel
-Instance.new("UICorner", boostBtn).CornerRadius = UDim.new(0.2, 0)
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0.12, 0)
